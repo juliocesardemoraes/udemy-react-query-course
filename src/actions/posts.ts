@@ -1,18 +1,18 @@
-export async function fetchPosts(pageNum = 1) {
+export async function fetchPosts(pageNum: number) {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${pageNum}`
   );
   return response.json();
 }
 
-export async function fetchComments(postId: string) {
+export async function fetchComments(postId: number) {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/comments?postId=${postId}`
   );
   return response.json();
 }
 
-export async function deletePost(postId: string) {
+export async function deletePost(postId: number) {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/posts/${postId}`,
     { method: "DELETE" }
@@ -20,7 +20,7 @@ export async function deletePost(postId: string) {
   return response.json();
 }
 
-export async function updatePost(postId: string) {
+export async function updatePost(postId: number) {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/posts/${postId}`,
     {
