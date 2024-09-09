@@ -3,7 +3,15 @@ import { fetchComments } from "../../actions/posts";
 import { IPosts } from "../../types/Posts";
 import "./PostDetail.css";
 
-export function PostDetail({ post }: { post: IPosts }) {
+export function PostDetail({
+  post,
+  deleteMutation,
+  updateMutation,
+}: {
+  post: IPosts;
+  deleteMutation: any;
+  updateMutation: any;
+}) {
   // replace with useQuery
   // const data: IPosts[] = [];
 
@@ -22,7 +30,10 @@ export function PostDetail({ post }: { post: IPosts }) {
   return (
     <main className="blog__content">
       <h3>{post.title}</h3>
-      <button>Delete</button> <button>Update title</button>
+      <button onClick={() => deleteMutation.mutate(post.id)}>Delete</button>
+      <button onClick={() => updateMutation.mutate(post.id)}>
+        Update title
+      </button>
       <p>{post.body}</p>
       <h4>Comments</h4>
       {data.map((comment: any) => (

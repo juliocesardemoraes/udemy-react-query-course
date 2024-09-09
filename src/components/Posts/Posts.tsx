@@ -1,13 +1,34 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 import { PostDetail } from "./PostDetail";
 import { IPosts } from "../../types/Posts";
-import { useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "../../actions/posts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deletePost, fetchPosts, updatePost } from "../../actions/posts";
+import { ArticleCardVertical } from "../ArticleItem/ArticleItem";
 
 export function Posts() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedPost, setSelectedPost] = useState<null | IPosts>(null);
+  const queryClient = useQueryClient();
+  const maxPostPage = 10;
+
+  const deleteMutation = useMutation({
+    mutationFn: (postId: number) => deletePost(postId),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (postId: number) => updatePost(postId),
+  });
+
+  useEffect(() => {
+    if (currentPage >= maxPostPage) return;
+
+    const nextPage = currentPage + 1;
+    queryClient.prefetchQuery({
+      queryKey: ["posts", nextPage],
+      queryFn: () => fetchPosts(nextPage),
+    });
+  }, [currentPage]);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["posts", currentPage],
@@ -22,13 +43,20 @@ export function Posts() {
     <>
       <ul>
         {data.map((post: any) => (
-          <li
+          <div
+            onClick={() => {
+              setSelectedPost(post);
+              deleteMutation.reset();
+            }}
             key={post.id}
-            className="post-title"
-            onClick={() => setSelectedPost(post)}
           >
-            {post.title}
-          </li>
+            <ArticleCardVertical
+              category={"Tecnologia"}
+              title={post.title}
+              author={"Júlio Moraes"}
+              date={post.data}
+            ></ArticleCardVertical>
+          </div>
         ))}
       </ul>
       <div className="pages">
@@ -51,7 +79,13 @@ export function Posts() {
         </button>
       </div>
       <hr />
-      {selectedPost && <PostDetail post={selectedPost} />}
+      {selectedPost && (
+        <PostDetail
+          post={selectedPost}
+          deleteMutation={deleteMutation}
+          updateMutation={updateMutation}
+        />
+      )}
     </>
   );
 }
