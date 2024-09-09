@@ -1,0 +1,11 @@
+.card {
+    background-color: var(--mantine-color-body);
+  }
+  
+  .title {
+    font-weight: bold;
+  }
+  
+  .body {
+    padding: var(--mantine-spacing-md);
+  }
