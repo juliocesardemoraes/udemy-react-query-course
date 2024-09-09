@@ -12,11 +12,6 @@ export async function fetchComments(postId: number) {
   return response.json();
 }
 
-/**
- * Function for deleting posts
- * @param postId
- * @returns
- */
 export async function deletePost(postId: number) {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/posts/${postId}`,
